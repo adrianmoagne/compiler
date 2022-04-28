@@ -37,12 +37,3 @@ class posfix:
             self.output.append(self.operatorsStack.pop())
 
         return " ".join(self.output)
-
-
-def main():
-    x = posfix("(A+B)*C+D")
-    print(x.convert())
-
-
-if __name__ == '__main__':
-    main()
