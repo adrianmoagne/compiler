@@ -16,24 +16,33 @@ class posfix:
         except KeyError:
             return False
 
-    def convert(self):    
+    def convert(self):
+        flag = False
+        
         for char in self.input:
-            if char.isalpha():
-               self.output.append(char)
+            
+            if ((char.isascii() and char not in ['+', '.', '*', '(', ')', '\\']) or flag): 
+                if flag:
+                    flag = False
+                    self.output.append('\\'+char)
+                else:    
+                    self.output.append(char)
+            elif (char == '\\'):
+                flag = True
+
             elif char == '(':
                 self.operatorsStack.push(char)
             elif char == ')':
-                topToken = self.operatorsStack.pop()
-                while topToken != '(':
-                    self.output.append(topToken)
-                    topToken = self.operatorsStack.pop()
+                top = self.operatorsStack.pop()
+                while top != '(':
+                    self.output.append(top)
+                    top = self.operatorsStack.pop()        
             else:
-                while (not self.operatorsStack.isEmpty()) and \
-                (self.greaterPrecedency(char)):
+                while (not self.operatorsStack.isEmpty()) and (self.greaterPrecedency(char)):
                     self.output.append(self.operatorsStack.pop())
                 self.operatorsStack.push(char)
 
         while not self.operatorsStack.isEmpty():
             self.output.append(self.operatorsStack.pop())
 
-        return " ".join(self.output)
+        return self.output
