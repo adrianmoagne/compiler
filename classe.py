@@ -19,8 +19,7 @@ class posfix:
     def convert(self):
         flag = False
         try:
-            for char in self.input:
-                
+            for char in self.input:            
                 if ((char.isascii() and char not in ['+', '.', '*', '(', ')', '\\', ' ']) or flag): 
                     if flag:
                         flag = False
@@ -29,7 +28,6 @@ class posfix:
                         self.output.append(char)
                 elif (char == '\\'):
                     flag = True
-
                 elif char == '(':
                     self.operatorsStack.push(char)
                 elif char == ')':
@@ -45,13 +43,9 @@ class posfix:
             while not self.operatorsStack.isEmpty():
                 self.output.append(self.operatorsStack.pop())
 
-            
-            no_space = ''.join(self.output)
-            no_space = no_space.split(' ')
-            no_space = ''.join(no_space)
-            self.output = list(no_space)
-            print(''.join(self.output))
-            
+            self.output = list((''.join(self.output)).replace(' ', ''))
+            print(self.output)
+
         except:
             self.output = []
             print('expressão inválida')
@@ -61,8 +55,7 @@ class posfix:
             return print('expressão ainda não convertida') 
         stack = Stack()    
         x = 0
-        while(x <= (len(self.output)-1)):
-            
+        while(x <= (len(self.output)-1)):         
             char = self.output[x]
             if(char.isascii() and char not in ['+', '.', '*', '(', ')']):
                 if(char == '\\'):
