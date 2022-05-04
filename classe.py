@@ -16,11 +16,43 @@ class posfix:
         except KeyError:
             return False
 
+    def explicit(self):
+        caracteres = self.input
+        i=0
+        while i<=(len(caracteres)-2):
+            if caracteres[i].isalpha() and (caracteres[i+1].isalpha() or caracteres[i+1]=='\\'):
+                caracteres.insert(i+1,'.')
+            elif caracteres[i] == '\\':
+                if i+2 == len(caracteres):
+                    pass
+                elif caracteres[i+1] == '\\':
+                    caracteres.insert(i+2,'.')
+                elif caracteres[i-1] == '\\':
+                    pass
+            
+            elif (caracteres[i-1]=='\\' and caracteres[i]!='\\' and caracteres[i+2] !='\\' and caracteres[i-2]!='\\'):
+                    caracteres.insert(i+1,'.')
+                
+            elif caracteres[i]==')' and caracteres[i+1]=='(':
+                caracteres.insert(i+1,'.')
+                
+            elif caracteres[i].isalpha() and caracteres[i+1]=='(':
+                caracteres.insert(i+1,'.')
+                
+            elif caracteres[i]==')' and caracteres[i+1].isalpha():
+                caracteres.insert(i+1,'.')
+            
+            elif caracteres[i]=='*' and caracteres[i+1].isalpha():
+                caracteres.insert(i+1,'.')  
+            i+=1
+        self.input = caracteres
+        print('Expressão explícita: '+''.join(caracteres))
+
     def convert(self):
         flag = False
         try:
             for char in self.input:            
-                if ((char.isascii() and char not in ['+', '.', '*', '(', ')', '\\', ' ']) or flag): 
+                if (((char.isascii() or char == 'ç') and char not in ['+', '.', '*', '(', ')', '\\', ' ']) or flag): 
                     if flag:
                         flag = False
                         self.output.append('\\'+char)
@@ -44,22 +76,22 @@ class posfix:
                 self.output.append(self.operatorsStack.pop())
 
             self.output = list((''.join(self.output)).replace(' ', ''))
-            print(self.output)
+            print('Expressão posfixa: '+''.join(self.output))
 
         except:
             self.output = []
-            print('expressão inválida')
+            print('Expressão inválida')
 
     def execute(self):
         if self.output == []:
-            return print('expressão ainda não convertida') 
+            return print('Expressão ainda não convertida') 
         stack = Stack()    
         x = 0
-        while(x <= (len(self.output)-1)):         
+        while(x < len(self.output)):         
             char = self.output[x]
-            if(char.isascii() and char not in ['+', '.', '*', '(', ')']):
+            if((char.isascii() or char == 'ç') and char not in ['+', '.', '*', '(', ')']):
                 if(char == '\\'):
-                    stack.push(char+input[x+1])
+                    stack.push(char+self.output[x+1])
                     x+=1
                 else:
                     stack.push(char)
@@ -75,13 +107,13 @@ class posfix:
                             value = operand1+operand2
                             stack.push(value)      
                         else:
-                            return print('expressão inválida')        
+                            return print('Expressão inválida')        
                 else:
-                    return print('expressão inválida')
+                    return print('Expressão inválida')
             x+=1
         operand1 = stack.pop()
 
         if(stack.isEmpty()):
-            print('expressão válida')
+            print('Expressão válida')
         else:
-            print('expressão inválida')
+            print('Expressão inválida')
