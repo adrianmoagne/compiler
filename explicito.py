@@ -4,9 +4,13 @@ def explicitar(expression):
     i=0
     while i<=(len(caracteres)-2):
         print('i: ',i)
-        if caracteres[i].isalpha() and (caracteres[i+1].isalpha() or caracteres[i+1]=='\\'):
-            caracteres.insert(i+1,'.')
-            print('1')
+        if caracteres[i].isalpha():
+            if caracteres[i+1].isascii() and caracteres[i+1] not in ['*','.','+']:
+                print('1') 
+                caracteres.insert(i+1,'.')
+                
+            
+            
         elif caracteres[i] == '\\':
             print('2')
             if i+2 == len(caracteres):
