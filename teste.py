@@ -42,5 +42,5 @@ def infixToPostfix(infixexpr):
         posfixa.append(opStack.pop())
     return " ".join(posfixa)
 
-print(infixToPostfix("( A + B ) * C + D"))
+print(infixToPostfix("( a + b ) * "))
 
