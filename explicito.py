@@ -45,7 +45,7 @@ def explicitar(expression):
             print('7')
             caracteres.insert(i+1,'.')
         
-        elif caracteres[i].isascii() and caracteres[i] not in ['*','.','+']:
+        elif caracteres[i].isascii() and caracteres[i] not in ['*','.','+'] and caracteres[i+1] not in ['*','.','+']:
             print('8')
             caracteres.insert(i+1,'.')
             
