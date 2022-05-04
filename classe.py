@@ -20,8 +20,10 @@ class posfix:
         caracteres = self.input
         i=0
         while i<=(len(caracteres)-2):
-            if caracteres[i].isalpha() and (caracteres[i+1].isalpha() or caracteres[i+1]=='\\'):
-                caracteres.insert(i+1,'.')
+            if caracteres[i].isalpha():
+                if caracteres[i+1].isascii() and caracteres[i+1] not in ['*','.','+']:
+                    caracteres.insert(i+1,'.')     
+
             elif caracteres[i] == '\\':
                 if i+2 == len(caracteres):
                     pass
@@ -30,9 +32,13 @@ class posfix:
                 elif caracteres[i-1] == '\\':
                     pass
             
-            elif (caracteres[i-1]=='\\' and caracteres[i]!='\\' and caracteres[i+2] !='\\' and caracteres[i-2]!='\\'):
+            elif (caracteres[i-1]=='\\' and caracteres[i]!='\\' ):
+                if len(caracteres) > i+2:
+                    if(caracteres[i+2] !='\\' and caracteres[i-2]!='\\'):
+                        caracteres.insert(i+1,'.')
+                else:
                     caracteres.insert(i+1,'.')
-                
+                   
             elif caracteres[i]==')' and caracteres[i+1]=='(':
                 caracteres.insert(i+1,'.')
                 
@@ -43,7 +49,10 @@ class posfix:
                 caracteres.insert(i+1,'.')
             
             elif caracteres[i]=='*' and caracteres[i+1].isalpha():
-                caracteres.insert(i+1,'.')  
+                caracteres.insert(i+1,'.')
+            
+            elif caracteres[i].isascii() and caracteres[i] not in ['*','.','+']:
+                caracteres.insert(i+1,'.')          
             i+=1
         self.input = caracteres
         print('Expressão explícita: '+''.join(caracteres))
