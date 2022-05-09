@@ -1,6 +1,9 @@
-from classe import posfix
+from functions import *
 
-expressao = posfix(input("Escolha a expressão: "))
-expressao.explicit()
-expressao.convert()
-expressao.execute()
+x = explicit(input('Expressão regular: '))
+print('Expressão explicita: ' + x)
+
+y = infixToPostfix(x)
+print('Experessão posfixa: ' + y)
+
+x = execute(y)
