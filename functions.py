@@ -1,9 +1,6 @@
 from models import *
 
 
-
-
-
 def explicit(input):
 
     current = Symbol(input).read()
@@ -77,7 +74,8 @@ def infixToPostfix(infixexpr):
 
 def execute(output):
     if len(output)==0:
-        return print('Expressão ainda não convertida') 
+        print('Expressão ainda não convertida') 
+        return False
     stack = Stack()    
     
     while( len(output) > 0):         
@@ -96,13 +94,18 @@ def execute(output):
                         value = operand1+operand2
                         stack.push(value)      
                     else:
-                        return print('Expressão inválida')        
+                        print('Expressão inválida') 
+                        return False       
             else:
-                return print('Expressão inválida')
+                print('Expressão inválida')
+                return False
         output =  output[len(char.value):]
     operand1 = stack.pop()
 
     if(stack.isEmpty()):
         print('Expressão válida')
+        return True
+        
     else:
         print('Expressão inválida')
+        return False
