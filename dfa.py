@@ -16,7 +16,8 @@ def augmentedRE(rexpression):
 
 def rexpression_to_node(input):
     x=[]
-    while len(input)>1:
+    
+    while len(input)>0:
         nodes = Symbol(input).read()
         x.append(nodes.value)
         input = input[len(nodes.value):]
