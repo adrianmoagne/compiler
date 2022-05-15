@@ -18,7 +18,6 @@ def rexpression_to_node(input):
     x=[]
     while len(input)>1:
         nodes = Symbol(input).read()
-        print(nodes.value)
         x.append(nodes.value)
         input = input[len(nodes.value):]
     return x
@@ -143,7 +142,7 @@ def followpos(nodes, followposz):
 
 def DFA(followposz, nodes, positions, alphabet):
     q0 = firstposz[positions[-1]]
-    print(f'q0 =  {q0}')
+    #print(f'q0 =  {q0}')
     states, states_unmarked = [], []
     i = 0
     trasition_function = {}
