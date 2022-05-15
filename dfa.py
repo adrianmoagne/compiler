@@ -1,3 +1,4 @@
+from models import *
 # Quíntupla dos autômatos finitos deterministas
 dfa_definition = ['Q', 'Σ', 'δ', 'q0', 'F']
 
@@ -6,25 +7,25 @@ dfa_definition = ['Q', 'Σ', 'δ', 'q0', 'F']
 firstposz = {}
 lastposz = {}
 
-# Acha um elemento em uma lista de listas
-def IsIn(element, place):
-    for i in place:
-        if isinstance(i, list):
-            if IsIn(element, i):
-                return True
-        else:
-            if element == i:
-                return True
-    return False
+
 
 # Retorna a expressão regular expandida
 def augmentedRE(rexpression):
     return rexpression+'#.'
     
 
+def rexpression_to_node(input):
+    x=[]
+    while len(input)>1:
+        nodes = Symbol(input).read()
+        print(nodes.value)
+        x.append(nodes.value)
+        input = input[len(nodes.value):]
+    return x
+
 # Abstração da árvore de sintaxe usando lista
 def syntaxtree(rexpression): #  ab+*b.#.
-    nodes = list(rexpression)
+    nodes = rexpression_to_node(rexpression)
     positions = []
     alphabet = []
     for i in range(len(nodes)):  
