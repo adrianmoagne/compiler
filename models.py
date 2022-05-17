@@ -49,3 +49,10 @@ class Operand(Symbol):
 class Parenthesis(Symbol):
     def __init__(self, input):
         super().__init__(input)
+        
+class Node:
+    def __init__(self,value) -> None:
+        self.value = value
+        self.left = None
+        self.right = None
+    

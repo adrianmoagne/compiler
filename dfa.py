@@ -1,155 +1,169 @@
 from models import *
-# Quíntupla dos autômatos finitos deterministas
-dfa_definition = ['Q', 'Σ', 'δ', 'q0', 'F']
-
-# Resultados das funções de firstpos e lastpos para todos os nós e folhas da árvore
-# São dicionários, da seguinte forma: "PosiçãoNóLista":"ConjuntoDeInteiros"
-firstposz = {}
-lastposz = {}
-
-
 
 # Retorna a expressão regular expandida
 def augmentedRE(rexpression):
     return rexpression+'#.'
     
 
-def rexpression_to_node(input):
-    x=[]
+def iterativePreorder(root):
+    if root is None:
+        return
+    nodeStack = []
+    nodeStack.append(root)
+    output = []
+    while(len(nodeStack) > 0):
+        node = nodeStack.pop()
+        output.append(node)
+        if node.right is not None:
+            nodeStack.append(node.right)
+        if node.left is not None:
+            nodeStack.append(node.left)      
+    return output         
+
+def nullable(node):
+    if node.value == '&':
+        return True
+    elif node.value == '*':
+        return True
+    elif node.value == '+':
+        return nullable(node.left) or nullable(node.right)
+
+    elif node.value  == '.':
+        return nullable(node.left) and nullable(node.right)
     
-    while len(input)>0:
-        nodes = Symbol(input).read()
-        x.append(nodes.value)
-        input = input[len(nodes.value):]
-    return x
-
-# Abstração da árvore de sintaxe usando lista
-def syntaxtree(rexpression): #  ab+*b.#.
-    nodes = rexpression_to_node(rexpression)
-    positions = []
-    alphabet = []
-    for i in range(len(nodes)):  
-        positions.append(i)
-    for node in nodes:
-        if node not in ['.', '+', '*', '#'] and node not in alphabet:
-            alphabet.append(node)
-    print(f'Nodes: {nodes}')
-    print(f'Positions: {positions}')
-    print(f'Alphabet: {alphabet}')
-    return nodes, positions, alphabet
-
-
-# Calcula a função nullable para um dado nó ou folha, levando em consideração seu(s) filho(s)
-def nullable(node, i, nodes):
-    if node == '&':
-        return True
-    elif node == '*':
-        return True
-    elif node == '+':
-        if nodes[i-1] == '*':
-            return nullable(nodes[i-3], i-3, nodes) or nullable(nodes[i-1], i-1, nodes)
-        else:
-            return nullable(nodes[i-2], i-2, nodes) or nullable(nodes[i-1], i-1, nodes)
-    elif node  == '.':
-        if nodes[i-1] == '*':
-            return nullable(nodes[i-3], i-3, nodes) and nullable(nodes[i-1], i-1, nodes)
-        else:
-            return nullable(nodes[i-2], i-2, nodes) and nullable(nodes[i-1], i-1, nodes)
     return False
 
 
-# Calcula a função firstpos
-def firstpos(nodes, positions):
-    # Para as folhas
-    x = 0
-    for position in positions:
-        if nodes[x] == '&':
-            firstposz.update({position:set()})
-        else:
-            firstposz.update({position:set([position])})
-        x+=1
-    # Para os nós
-    for i in range(len(nodes)):
-        if nodes[i] == '+':
-            if nodes[i-1] == '*':
-                 firstposz.update({i:firstposz[i-3].union(firstposz[i-1])})
-            else:
-                firstposz.update({i:firstposz[i-2].union(firstposz[i-1])})
-        if nodes[i] == '*':
-            firstposz.update({i:firstposz[i-1]})
-        if nodes[i] == '.':
-            if nodes[i-1] == '*':
-                if nullable(nodes[i-3], i-3, nodes):
-                    firstposz.update({i:firstposz[i-3].union(firstposz[i-1])})
-                else:
-                    firstposz.update({i:firstposz[i-3]})
-            else:
-                if nullable(nodes[i-2], i-2, nodes):
-                    firstposz.update({i:firstposz[i-2].union(firstposz[i-1])})
-                else:
-                    firstposz.update({i:firstposz[i-2]})
-
-
-# Calcula a função lastpos
-def lastpos(nodes, positions):
-    # Para as folhas
+       
+def syntax_tree(input):
+    stack = Stack() 
     i = 0
-    for position in positions:
-        if nodes[i] == '&':
-            lastposz.update({position:set()})
-        elif position not in ['*', '+', '.']:
-            lastposz.update({position:set([position])})
-        i+=1
-    # Para os nós
-    for i in range(len(nodes)):
-        if nodes[i] == '+':
-            if nodes[i-1] == '*':
-                lastposz.update({i:lastposz[i-3].union(lastposz[i-1])})
-            else:
-                lastposz.update({i:lastposz[i-2].union(lastposz[i-1])})
-        if nodes[i] == '*':
-            lastposz.update({i:lastposz[i-1]})
-        if nodes[i] == '.':
-            if nodes[i-1] == '*':
-                if nullable(nodes[i-1], i-1, nodes):
-                    lastposz.update({i:lastposz[i-3].union(lastposz[i-1])})
-                else:
-                    lastposz.update({i:lastposz[i-1]})
-            else:
-                if nullable(nodes[i-1], i-1, nodes):
-                    lastposz.update({i:lastposz[i-2].union(lastposz[i-1])})
-                else:
-                    lastposz.update({i:lastposz[i-1]})
+    while len(input) > 0:
+        char = Symbol(input).read()
+        if isinstance(char,Operand):
+            node_operand = Node(char.value)
+            node_operand.firstposz = {i}
+            node_operand.lastposz = {i}
+            i+=1
+            stack.push(node_operand)
+        else: 
+            if(not stack.isEmpty()):
+                if(char.value == '*'):
+                    node_operand = stack.pop()
+                    next = Node(char.value)
+                    next.left = node_operand
+                    stack.push(next)
+                    next.firstposz = node_operand.firstposz
+                    next.lastposz = node_operand.lastposz
+                else: 
+                    if(not stack.isEmpty()):
+                        
+                        node_operand1 = stack.pop()
+                        node_operand2 = stack.pop()
+                        if not isinstance(node_operand1,Node):
+                            node_operand1 = Node(node_operand1)
+                            node_operand1.firstposz = {i}
+                            node_operand1.lastposz = {i}
+                            i+=1
+                        if not isinstance(node_operand2,Node):   
+                            node_operand2 = Node(node_operand2)
+                            node_operand2.firstposz = {i}
+                            node_operand2.lastposz = {i}
+                            i+=1
+                        next = Node(char.value)
+                       
+                        
+                        next.right = node_operand1
+                        next.left = node_operand2
+                        if char.value == '+':
+                            next.firstposz = next.right.firstposz.union(next.left.firstposz)
+                            next.lastposz = next.right.lastposz.union(next.left.lastposz)
+                        else:
+                            if nullable(next.left):
+                                next.firstposz = next.right.firstposz.union(next.left.firstposz)
+                            else:
+                                next.firstposz = next.left.firstposz
+                                
+                                
+                            if nullable(next.right):
+                                next.lastposz = next.right.lastposz.union(next.left.lastposz)
+                            else:
+                                next.lastposz = next.right.lastposz
+                        stack.push(next)
+                        
+        input =  input[len(char.value):]
+    
+    x = stack.pop()
+    x = iterativePreorder(x)
+    return x
+    
+                     
+# a*b*.#.                     
+#  a*b*.**cd.w.+pa.a.+
+#  a*b*.**cd.w.+pa.a.+                  
+# ((a*b*)*)*+cdw+paa                                      
+                    
+
+# for node in tree:
+#     print(node.value, node.firstposz,node.lastposz)
+                  
 
 
+followposz ={} 
 # Calcula followpos para cada folha marcada com uma posição i 
 def followpos(nodes, followposz):
-    i = 0
     for node in nodes:
-        if node == '.':
-            if nodes[i-1] == '*':
-                for position in lastposz[i-3]:
-                    followposz[position] = followposz[position].union(firstposz[i-1])
-            else:
-                for position in lastposz[i-2]:
-                    followposz[position] = followposz[position].union(firstposz[i-1])      
-        elif node == '*':
-            for position in lastposz[i]:
-                followposz[position] = followposz[position].union(firstposz[i])
-        i+=1 
+        if node.value == '.':
+            for i in node.left.lastposz:
+                if i not in followposz:
+                    followposz[i] = node.right.firstposz
+                else:
+                    followposz[i] = followposz[i].union(node.right.firstposz)
+                    
+        if node.value == '*':
+            for i in node.lastposz:
+                if i not in followposz:
+                    followposz[i] = node.firstposz
+                else:
+                    followposz[i] = followposz[i].union(node.firstposz)
+        
+        
+        if node.value == '#':
+            followposz[list(node.firstposz)[0]]=set()
+        
+    #print(followposz)
 
-    return followposz
+  
 
 
-def DFA(followposz, nodes, positions, alphabet):
-    q0 = firstposz[positions[-1]]
+def get_alphabet(input):
+    alphabet = []
+    for char in input:
+        if char not in ['.', '+', '*', '#'] and char not in alphabet:
+            alphabet.append(char)
+            
+    return alphabet
+
+
+def get_symbol_positions(input):
+    symbol_positions = []
+    for char in input:
+        if char not in ['.', '+', '*']:
+            symbol_positions.append(char)
+            
+    return symbol_positions
+
+
+def DFA(followposz, nodes,postions,alphabet):
+
+    q0 = nodes[0].firstposz
     #print(f'q0 =  {q0}')
     states, states_unmarked = [], []
     i = 0
     trasition_function = {}
     states_unmarked.append(q0)
     exit = len(states_unmarked)
-    teste = {}
+
     while(exit > 0):
         flag = False
         state = states_unmarked.pop()
@@ -157,67 +171,52 @@ def DFA(followposz, nodes, positions, alphabet):
         for symbol in alphabet:
             U = set()        
             for position in state:
-                if nodes[position] == '#':
+                if postions[position] == '#':
                     flag = True
-                if nodes[position] == symbol:
+                if postions[position] == symbol:
                     U = U.union(followposz[position])
             if U not in states_unmarked and U not in states:
                 states_unmarked.append(U)
             if flag:
                 if state == q0:
-                    if '->*q'+str(i) in teste:
-                        teste['->*q'+str(i)].update({symbol:U})
+                    if '->*q'+str(i) in trasition_function:
+                        trasition_function['->*q'+str(i)].update({symbol:U})
                     else: 
-                        teste['->*q'+str(i)] = {symbol:U} 
-                    trasition_function.update({'('+'->'+'*'+'q'+str(i)+','+symbol+')':U})
+                        trasition_function['->*q'+str(i)] = {symbol:U} 
+                   
                 else:
-                    if '*q'+str(i) in teste:
-                        teste['*q'+str(i)].update({symbol:U})
+                    if '*q'+str(i) in trasition_function:
+                        trasition_function['*q'+str(i)].update({symbol:U})
                     else: 
-                        teste['*q'+str(i)] = {symbol:U} 
+                        trasition_function['*q'+str(i)] = {symbol:U} 
                 
-                    trasition_function.update({'('+'*'+'q'+str(i)+','+symbol+')':U})
+                   
             elif state == q0:
-                if '->q'+str(i) in teste:
-                    teste['->q'+str(i)].update({symbol:U})
+                if '->q'+str(i) in trasition_function:
+                    trasition_function['->q'+str(i)].update({symbol:U})
                 else: 
-                    teste['->q'+str(i)] = {symbol:U}
-                trasition_function.update({'('+'->'+'q'+str(i)+','+symbol+')':U})  
+                    trasition_function['->q'+str(i)] = {symbol:U}
+                 
             else:
-                if 'q'+str(i) in teste:
-                    teste['q'+str(i)].update({symbol:U})
+                if 'q'+str(i) in trasition_function:
+                    trasition_function['q'+str(i)].update({symbol:U})
                 else: 
-                    teste['q'+str(i)] = {symbol:U}
-                trasition_function.update({'('+'q'+str(i)+','+symbol+')':U})
+                    trasition_function['q'+str(i)] = {symbol:U}
+             
         i+=1
         exit = len(states_unmarked)
     
     
-    #print(f'Q = {Q}')
+    print(f'Q = {states}')
     #print(trasition_function)
-    
-   
-    for value in trasition_function:
-     
-        if trasition_function[value] in states:
-            trasition_function.update({value:'q'+str(states.index(trasition_function[value]))})
-        else:
-            trasition_function.update({value:'q'+str(states.index(trasition_function[value]))})
+ 
 
-    for value in teste:
-        for x in teste[value]:
-            teste[value][x]='q'+str(states.index(teste[value][x]))
+    for value in trasition_function:
+        for x in trasition_function[value]:
+            trasition_function[value][x]='q'+str(states.index(trasition_function[value][x]))
     
     for index in range(len(states)):
         states[index] = 'q'+str(index)
 
-    #print(f'Q = {Q}')
-   # print(δ)
-   # print(teste)
-    return teste
-
-        
-
-
-
+    return trasition_function
 
