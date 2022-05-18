@@ -169,7 +169,7 @@ def DFA(followposz, nodes,postions,alphabet):
 
     while(exit > 0):
         flag = False
-        state = states_unmarked.pop()
+        state = states_unmarked.pop(0)
         states.append(state)
         for symbol in alphabet:
             U = set()        
@@ -216,12 +216,12 @@ def DFA(followposz, nodes,postions,alphabet):
     for value in transition_function:
         for x in transition_function[value]:
             transition_function[value][x]='q'+str(states.index(transition_function[value][x]))
+    '''
+    for index in range(len(states)):
+        states[index] = 'q'+str(index)
     
     for index in range(len(states)):
-        states[index] = 'q'+str(index)
-
-    for index in range(len(states)):
-        states[index] = 'q'+str(index)
+        states[index] = 'q'+str(index)'''
     print(f'Q = {states}')
  
 
