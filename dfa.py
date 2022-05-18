@@ -160,7 +160,7 @@ def DFA(followposz, nodes,postions,alphabet):
     #print(f'q0 =  {q0}')
     states, states_unmarked = [], []
     i = 0
-    trasition_function = {}
+    transition_function = {}
     states_unmarked.append(q0)
     exit = len(states_unmarked)
 
@@ -179,44 +179,48 @@ def DFA(followposz, nodes,postions,alphabet):
                 states_unmarked.append(U)
             if flag:
                 if state == q0:
-                    if '->*q'+str(i) in trasition_function:
-                        trasition_function['->*q'+str(i)].update({symbol:U})
+                    if '->*q'+str(i) in transition_function:
+                        transition_function['->*q'+str(i)].update({symbol:U})
                     else: 
-                        trasition_function['->*q'+str(i)] = {symbol:U} 
+                        transition_function['->*q'+str(i)] = {symbol:U} 
                    
                 else:
-                    if '*q'+str(i) in trasition_function:
-                        trasition_function['*q'+str(i)].update({symbol:U})
+                    if '*q'+str(i) in transition_function:
+                        transition_function['*q'+str(i)].update({symbol:U})
                     else: 
-                        trasition_function['*q'+str(i)] = {symbol:U} 
+                        transition_function['*q'+str(i)] = {symbol:U} 
                 
                    
             elif state == q0:
-                if '->q'+str(i) in trasition_function:
-                    trasition_function['->q'+str(i)].update({symbol:U})
+                if '->q'+str(i) in transition_function:
+                    transition_function['->q'+str(i)].update({symbol:U})
                 else: 
-                    trasition_function['->q'+str(i)] = {symbol:U}
+                    transition_function['->q'+str(i)] = {symbol:U}
                  
             else:
-                if 'q'+str(i) in trasition_function:
-                    trasition_function['q'+str(i)].update({symbol:U})
+                if 'q'+str(i) in transition_function:
+                    transition_function['q'+str(i)].update({symbol:U})
                 else: 
-                    trasition_function['q'+str(i)] = {symbol:U}
+                    transition_function['q'+str(i)] = {symbol:U}
              
         i+=1
         exit = len(states_unmarked)
     
-    
-    print(f'Q = {states}')
-    #print(trasition_function)
+   
+    #print(transition_function)
  
 
-    for value in trasition_function:
-        for x in trasition_function[value]:
-            trasition_function[value][x]='q'+str(states.index(trasition_function[value][x]))
+    for value in transition_function:
+        for x in transition_function[value]:
+            transition_function[value][x]='q'+str(states.index(transition_function[value][x]))
     
     for index in range(len(states)):
         states[index] = 'q'+str(index)
 
-    return trasition_function
+    for index in range(len(states)):
+        states[index] = 'q'+str(index)
+    print(f'Q = {states}')
+ 
+
+    return transition_function
 

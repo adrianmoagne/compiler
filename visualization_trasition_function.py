@@ -1,8 +1,10 @@
 import pandas as pd
-#from rich_dataframe import prettify
+from rich_dataframe import prettify
+from termcolor import colored
 
 def visualization(table):
     transition_function = pd.DataFrame(table).T
-    #transition_function = prettify(transition_function)
-    print('\n' + 'Tabela de Transicao:')
-    print(transition_function)
+    print('')
+    print(colored('Tabela de transição:', 'cyan').center(155))
+    transition_function = prettify(transition_function, clear_console=False)
+    #print(transition_function)

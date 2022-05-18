@@ -1,4 +1,5 @@
 from models import *
+from termcolor import colored
 
 
 def explicit(input):
@@ -94,20 +95,20 @@ def execute(output):
                         value = operand1+operand2
                         stack.push(value)      
                     else:
-                        print('Expressão inválida') 
+                        print(colored('Expressão inválida', 'red')) 
                         return False       
             else:
-                print('Expressão inválida')
+                print(colored('Expressão inválida', 'red'))
                 return False
         output =  output[len(char.value):]
     operand1 = stack.pop()
 
     if(stack.isEmpty()):
-        print('Expressão válida')
+        print(colored('Expressão válida', 'green'))
         return True
         
     else:
-        print('Expressão inválida')
+        print(colored('Expressão inválida', 'red'))
         return False
     
     
