@@ -138,19 +138,22 @@ def followpos(nodes, followposz):
 
 def get_alphabet(input):
     alphabet = []
-    for char in input:
-        if char not in ['.', '+', '*', '#'] and char not in alphabet:
-            alphabet.append(char)
+    while len(input)>0:
+        char = Symbol(input).read()
+        if char.value not in ['*','+','.','#'] and char.value not in alphabet:
+            alphabet.append(char.value)
+        input = input[len(char.value):]
             
     return alphabet
 
 
 def get_symbol_positions(input):
     symbol_positions = []
-    for char in input:
-        if char not in ['.', '+', '*']:
-            symbol_positions.append(char)
-            
+    while len(input) > 0:
+        char = Symbol(input).read()
+        if char.value not in ['.', '+', '*']:
+            symbol_positions.append(char.value)
+        input = input[len(char.value):] 
     return symbol_positions
 
 
