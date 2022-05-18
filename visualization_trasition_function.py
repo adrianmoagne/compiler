@@ -1,4 +1,6 @@
 import pandas as pd
+import sys
+sys.path.insert(1, './colorize')
 from rich_dataframe import prettify
 from termcolor import colored
 

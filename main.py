@@ -2,6 +2,8 @@ from functions import *
 from dfa import *
 from visualization_trasition_function import visualization
 import os
+import sys
+sys.path.insert(1, './colorize')
 from termcolor import colored
 
 exit = False
@@ -32,8 +34,6 @@ while(not exit):
         expression = augmentedRE(pos)
         alphabet = get_alphabet(expression)
         positions = get_symbol_positions(expression)
-        print(alphabet)
-        print(positions)
         tree = syntax_tree(expression)
         followpos(tree,followposz)
         visualization(DFA(followposz,tree,positions,alphabet))
