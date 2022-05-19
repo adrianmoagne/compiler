@@ -214,8 +214,23 @@ def DFA(followposz, nodes,postions,alphabet):
  
 
     for value in transition_function:
-        for x in transition_function[value]:
+        for x in transition_function[value]:  
             transition_function[value][x]='q'+str(states.index(transition_function[value][x]))
+
+    for value in transition_function:
+        for x in transition_function[value]:  
+            print(transition_function[value][x])
+            for keys in transition_function.keys():
+                if transition_function[value][x] in keys:
+                    transition_function[value][x] = keys
+
+
+    # for value in transition_function:
+    #     for x in transition_function[value]:
+    #         if transition_function[value][x] == value and '*' in value:
+    #             if '>' in value:
+    #                 transition_function[value][x]='->*q'+str(states.index(transition_function[value][x]))
+    #             transition_function[value][x]='*q'+str(states.index(transition_function[value][x]))
     '''
     for index in range(len(states)):
         states[index] = 'q'+str(index)
@@ -230,12 +245,32 @@ def DFA(followposz, nodes,postions,alphabet):
 
 
 
-def minimization(alphabet,                  transition_function,Q):
+def minimization(alphabet,transition_function,Q):
     tabela = {}
+    flag = True
     for state in transition_function:
         for next in transition_function:
             if state != next and next+state not in tabela:
-                tabela.update({state+next:0})
-            
+                if ('*' in state and '*' not in next) or ('*' in next and '*' not in state):
+                    tabela.update({state+next:1})
+                else:
+                    tabela.update({state+next:0})
+    
+    while(flag):
+        flag = False
+    
+        for state in transition_function:
+            for next in transition_function:
+                for letter in alphabet:
+                    if state != next and next+state not in tabela:
+                        if transition_function[state][letter] != transition_function[next][letter] and transition_function[next][letter]+transition_function[state][letter] not in tabela:
+                            if tabela[state+next] == 0 and tabela[transition_function[state][letter]+transition_function[next][letter]] == 1:
+                                tabela.update({state+next:1})
+                                flag = True
+                            
+        
+
+
+    
     print(tabela)
     
