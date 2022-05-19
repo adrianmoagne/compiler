@@ -223,7 +223,19 @@ def DFA(followposz, nodes,postions,alphabet):
     for index in range(len(states)):
         states[index] = 'q'+str(index)'''
     print(f'Q = {states}')
+    print(transition_function)
  
-
+    minimization(alphabet,transition_function,states)
     return transition_function
 
+
+
+def minimization(alphabet,                  transition_function,Q):
+    tabela = {}
+    for state in transition_function:
+        for next in transition_function:
+            if state != next and next+state not in tabela:
+                tabela.update({state+next:0})
+            
+    print(tabela)
+    
