@@ -140,7 +140,7 @@ def get_alphabet(input):
     alphabet = []
     while len(input)>0:
         char = Symbol(input).read()
-        if char.value not in ['*','+','.','#'] and char.value not in alphabet:
+        if char.value not in ['*','+','.','#', '&'] and char.value not in alphabet:
             alphabet.append(char.value)
         input = input[len(char.value):]
             
@@ -158,7 +158,7 @@ def get_symbol_positions(input):
 
 
 def DFA(followposz, nodes,postions,alphabet):
-
+    
     q0 = nodes[0].firstposz
     #print(f'q0 =  {q0}')
     states, states_unmarked = [], []
@@ -219,7 +219,6 @@ def DFA(followposz, nodes,postions,alphabet):
 
     for value in transition_function:
         for x in transition_function[value]:  
-            print(transition_function[value][x])
             for keys in transition_function.keys():
                 if transition_function[value][x] in keys:
                     transition_function[value][x] = keys
@@ -240,11 +239,11 @@ def DFA(followposz, nodes,postions,alphabet):
     print(f'Q = {states}')
     print(transition_function)
  
-    minimization(alphabet,transition_function,states)
+    #minimization(alphabet,transition_function,states)
     return transition_function
 
 
-
+'''
 def minimization(alphabet,transition_function,Q):
     tabela = {}
     flag = True
@@ -258,10 +257,9 @@ def minimization(alphabet,transition_function,Q):
     
     while(flag):
         flag = False
-    
-        for state in transition_function:
-            for next in transition_function:
-                for letter in alphabet:
+        for letter in alphabet:
+            for state in transition_function:
+                for next in transition_function:          
                     if state != next and next+state not in tabela:
                         if transition_function[state][letter] != transition_function[next][letter] and transition_function[next][letter]+transition_function[state][letter] not in tabela:
                             if tabela[state+next] == 0 and tabela[transition_function[state][letter]+transition_function[next][letter]] == 1:
@@ -272,5 +270,5 @@ def minimization(alphabet,transition_function,Q):
 
 
     
-    print(tabela)
+    print(tabela)'''
     
