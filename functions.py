@@ -113,7 +113,22 @@ def execute(output):
         print(colored('Expressão inválida', 'red'))
         return False
     
+def finalize(expressions):
+    aux = ''
+    for expression in range(len(expressions)):
+        expressions[expression].insert(0, '(')
+        if len(expressions) == 1:
+            expressions[expression].append(')#')
+        elif len(expressions) != 1 and expression == len(expressions)-1:
+            expressions[expression].append(')#')
+        else:
+            expressions[expression].append(')#+')
     
+    for expression in range(len(expressions)):
+        aux = aux+''.join(expressions[expression])
+    
+    
+    return aux
     
     
     
