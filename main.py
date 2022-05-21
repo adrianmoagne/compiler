@@ -3,8 +3,10 @@ from dfa import *
 from visualization_trasition_function import visualization
 
 flag = True
-final = []
+final, tokens = [], []
 while flag:
+    token = input(colored('Token: ', 'magenta'))
+    tokens.append(token)
     inpt = input(colored('Expressão regular: ', 'magenta'))
     if inpt == '':
         flag = False
@@ -13,8 +15,12 @@ while flag:
     inpt = list(inpt)
     final.append(inpt)
 
+tokens.pop()
+
+
 if final:    
     exp = finalize(final)
+    print(exp)
     exp = explicit(exp)
 
 
@@ -34,10 +40,20 @@ try:
         #for node in tree:
         #    print(node.value, node.firstposz,node.lastposz)
         followpos(tree,followposz)
-        print(followposz)
-        print(alphabet)
-        print(positions)
-        visualization(DFA(followposz,tree,positions,alphabet))
+        #print(followposz)
+        #print(alphabet)
+        #print(positions)
+        transition_function, aux = DFA(followposz,tree,positions,alphabet)
+        finalstates = []
+        for item in aux:
+            if '#' in item:
+                item = item.replace('#', '')
+                finalstates.append(item)
+        final_list = [tokens[i]+' => '+finalstates[i] for i in range(len(tokens))]
+        print('\n'.join(final_list))
+                
+        visualization(transition_function)
+    
 except:
     print(colored('Expressão inválida', 'red'))
    

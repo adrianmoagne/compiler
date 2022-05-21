@@ -155,11 +155,15 @@ def get_symbol_positions(input):
             symbol_positions.append(char.value)
         input = input[len(char.value):] 
     return symbol_positions
-
+'''
+def transition(transition_function, state, word, i):
+    if '*' in state and i == len(word)-1:
+        return state
+    return transition(transition_function, transition_function[state][word[i]], word, i+1)'''
 
 def DFA(followposz, nodes,postions,alphabet):
-    
     q0 = nodes[0].firstposz
+    aux = postions.copy()
     #print(f'q0 =  {q0}')
     states, states_unmarked = [], []
     i = 0
@@ -175,23 +179,31 @@ def DFA(followposz, nodes,postions,alphabet):
             U = set()        
             for position in state:
                 if postions[position] == '#':
+                    pos = position
                     flag = True
                 if postions[position] == symbol:
                     U = U.union(followposz[position])
             if U not in states_unmarked and U not in states:
                 states_unmarked.append(U)
             if flag:
+                
                 if state == q0:
                     if '->*q'+str(i) in transition_function:
                         transition_function['->*q'+str(i)].update({symbol:U})
+                        
                     else: 
                         transition_function['->*q'+str(i)] = {symbol:U} 
+                        aux[pos] = '->*q'+str(i)+' '+aux[pos] 
+                        
                    
                 else:
                     if '*q'+str(i) in transition_function:
                         transition_function['*q'+str(i)].update({symbol:U})
+                        
                     else: 
                         transition_function['*q'+str(i)] = {symbol:U} 
+                        aux[pos] = '*q'+str(i)+' '+aux[pos]
+                        
                 
                    
             elif state == q0:
@@ -230,17 +242,22 @@ def DFA(followposz, nodes,postions,alphabet):
     #             if '>' in value:
     #                 transition_function[value][x]='->*q'+str(states.index(transition_function[value][x]))
     #             transition_function[value][x]='*q'+str(states.index(transition_function[value][x]))
-    '''
-    for index in range(len(states)):
-        states[index] = 'q'+str(index)
     
     for index in range(len(states)):
-        states[index] = 'q'+str(index)'''
+        states[index] = 'q'+str(index)
+        for value in transition_function.keys():
+            if states[index] in value and '*' in value:
+                states[index] = '*'+states[index]
+    states[0] = '->q0'
+    
+    
+    
     print(f'Q = {states}')
-    print(transition_function)
+    print('')
+    #print(transition_function)
  
     #minimization(alphabet,transition_function,states)
-    return transition_function
+    return transition_function, aux
 
 
 '''
