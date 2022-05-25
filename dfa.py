@@ -20,6 +20,7 @@ def iterativePreorder(root):
             nodeStack.append(node.left)      
     return output         
 
+# Calcula o valor de nullable para o nó de entrada
 def nullable(node):
     if node.value == '&':
         return True
@@ -34,7 +35,7 @@ def nullable(node):
     return False
 
 
-       
+# Constrói a árvore sintática para a expressão regular expandida de entrada       
 def syntax_tree(input):
     stack = Stack() 
     i = 0
@@ -97,15 +98,6 @@ def syntax_tree(input):
     x = iterativePreorder(x)
     return x
     
-                     
-# a*b*.#.                     
-#  a*b*.**cd.w.+pa.a.+
-#  a*b*.**cd.w.+pa.a.+                  
-# ((a*b*)*)*+cdw+paa                                      
-                    
-
-# for node in tree:
-#     print(node.value, node.firstposz,node.lastposz)
                   
 
 
@@ -131,9 +123,6 @@ def followpos(nodes, followposz):
         if node.value == '#':
             followposz[list(node.firstposz)[0]]=set()
         
-    #print(followposz)
-
-  
 
 
 def get_alphabet(input):
@@ -156,11 +145,10 @@ def get_symbol_positions(input):
         input = input[len(char.value):] 
     return symbol_positions
 
-
+# Constrói o autômato finito determinista
 def DFA(followposz, nodes,postions,alphabet):
     
     q0 = nodes[0].firstposz
-    #print(f'q0 =  {q0}')
     states, states_unmarked = [], []
     i = 0
     transition_function = {}
@@ -209,8 +197,6 @@ def DFA(followposz, nodes,postions,alphabet):
         i+=1
         exit = len(states_unmarked)
     
-   
-    #print(transition_function)
  
 
     for value in transition_function:
@@ -224,51 +210,6 @@ def DFA(followposz, nodes,postions,alphabet):
                     transition_function[value][x] = keys
 
 
-    # for value in transition_function:
-    #     for x in transition_function[value]:
-    #         if transition_function[value][x] == value and '*' in value:
-    #             if '>' in value:
-    #                 transition_function[value][x]='->*q'+str(states.index(transition_function[value][x]))
-    #             transition_function[value][x]='*q'+str(states.index(transition_function[value][x]))
-    '''
-    for index in range(len(states)):
-        states[index] = 'q'+str(index)
-    
-    for index in range(len(states)):
-        states[index] = 'q'+str(index)'''
-    print(f'Q = {states}')
-    print(transition_function)
  
-    #minimization(alphabet,transition_function,states)
     return transition_function
-
-
-'''
-def minimization(alphabet,transition_function,Q):
-    tabela = {}
-    flag = True
-    for state in transition_function:
-        for next in transition_function:
-            if state != next and next+state not in tabela:
-                if ('*' in state and '*' not in next) or ('*' in next and '*' not in state):
-                    tabela.update({state+next:1})
-                else:
-                    tabela.update({state+next:0})
-    
-    while(flag):
-        flag = False
-        for letter in alphabet:
-            for state in transition_function:
-                for next in transition_function:          
-                    if state != next and next+state not in tabela:
-                        if transition_function[state][letter] != transition_function[next][letter] and transition_function[next][letter]+transition_function[state][letter] not in tabela:
-                            if tabela[state+next] == 0 and tabela[transition_function[state][letter]+transition_function[next][letter]] == 1:
-                                tabela.update({state+next:1})
-                                flag = True
-                            
-        
-
-
-    
-    print(tabela)'''
     

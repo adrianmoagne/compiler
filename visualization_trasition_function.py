@@ -9,4 +9,3 @@ def visualization(table):
     print('')
     print(colored('Tabela de transição:', 'cyan').center(155))
     transition_function = prettify(transition_function, clear_console=False)
-    #print(transition_function)

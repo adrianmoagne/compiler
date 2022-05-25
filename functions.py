@@ -112,21 +112,3 @@ def execute(output):
     else:
         print(colored('Expressão inválida', 'red'))
         return False
-    
-    
-    
-    
-    
-
-
-
-# Acha um elemento em uma lista de listas
-def IsIn(element, place):
-    for i in place:
-        if isinstance(i, list):
-            if IsIn(element, i):
-                return True
-        else:
-            if element == i:
-                return True
-    return False
