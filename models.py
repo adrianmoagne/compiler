@@ -56,3 +56,11 @@ class Node:
         self.left = None
         self.right = None
     
+    
+class State:
+    def __init__(self,index,value,transition) -> None:
+        self.value = value
+        self.index = index
+        self.final = False
+        self.transition = transition
+        self.equivalent = []

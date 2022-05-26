@@ -28,6 +28,9 @@ if exc:
     print(followposz)
     print(alphabet)
     print(positions)
-    visualization(DFA(followposz,tree,positions,alphabet))
+    dfa,mini= DFA(followposz,tree,positions,alphabet)
+    visualization(dfa)
+    visualization(mini)
+    
  
    
