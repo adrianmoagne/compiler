@@ -20,7 +20,6 @@ tokens.pop()
 
 if final:    
     exp = finalize(final)
-    print(exp)
     exp = explicit(exp)
 
 

@@ -228,12 +228,12 @@ def DFA(followposz, nodes,postions,alphabet):
     for value in transition_function:
         for x in transition_function[value]:  
             transition_function[value][x]='q'+str(states.index(transition_function[value][x]))
-
+    '''
     for value in transition_function:
         for x in transition_function[value]:  
             for keys in transition_function.keys():
-                if transition_function[value][x] in keys:
-                    transition_function[value][x] = keys
+                if transition_function[value][x] in keys and len(transition_function[value][x]) == len(keys)-1:
+                    transition_function[value][x] = keys'''
 
 
     # for value in transition_function:
@@ -246,7 +246,7 @@ def DFA(followposz, nodes,postions,alphabet):
     for index in range(len(states)):
         states[index] = 'q'+str(index)
         for value in transition_function.keys():
-            if states[index] in value and '*' in value:
+            if states[index] in value and '*' in value and len(states[index]) == len(value)-1:
                 states[index] = '*'+states[index]
     states[0] = '->q0'
     
