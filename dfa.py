@@ -228,12 +228,12 @@ def DFA(followposz, nodes,postions,alphabet):
     for value in transition_function:
         for x in transition_function[value]:  
             transition_function[value][x]='q'+str(states.index(transition_function[value][x]))
-    '''
+    
     for value in transition_function:
         for x in transition_function[value]:  
             for keys in transition_function.keys():
-                if transition_function[value][x] in keys and len(transition_function[value][x]) == len(keys)-1:
-                    transition_function[value][x] = keys'''
+                if '*'+transition_function[value][x] == keys or '->*'+transition_function[value][x] == keys:
+                    transition_function[value][x] = keys
 
 
     # for value in transition_function:
@@ -242,22 +242,23 @@ def DFA(followposz, nodes,postions,alphabet):
     #             if '>' in value:
     #                 transition_function[value][x]='->*q'+str(states.index(transition_function[value][x]))
     #             transition_function[value][x]='*q'+str(states.index(transition_function[value][x]))
-    
-    for index in range(len(states)):
-        states[index] = 'q'+str(index)
+    states2 = states.copy()
+    states2[0] = '->q0'
+    for index in range(1,len(states)):
+        states2[index] = 'q'+str(index)
         for value in transition_function.keys():
-            if states[index] in value and '*' in value and len(states[index]) == len(value)-1:
-                states[index] = '*'+states[index]
-    states[0] = '->q0'
+            if states2[index] in value and '*' in value and len(states2[index]) == len(value)-1:
+                states2[index] = '*'+states2[index]
+     
     
     
     
-    print(f'Q = {states}')
+    print(f'Q = {states}\n {states2}')
     print('')
     #print(transition_function)
  
     #minimization(alphabet,transition_function,states)
-    return transition_function, aux
+    return transition_function, aux, states, states2
 
 
 '''

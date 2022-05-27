@@ -7,10 +7,10 @@ final, tokens = [], []
 while flag:
     token = input(colored('Token: ', 'magenta'))
     tokens.append(token)
-    inpt = input(colored('Expressão regular: ', 'magenta'))
-    if inpt == '':
+    if token == '':
         flag = False
         continue
+    inpt = input(colored('Expressão regular: ', 'magenta'))
     exp = explicit(inpt)
     inpt = list(inpt)
     final.append(inpt)
@@ -42,13 +42,13 @@ try:
         #print(followposz)
         #print(alphabet)
         #print(positions)
-        transition_function, aux = DFA(followposz,tree,positions,alphabet)
+        transition_function, aux, states, states2 = DFA(followposz,tree,positions,alphabet)
         finalstates = []
         for item in aux:
             if '#' in item:
                 item = item.replace('#', '')
                 finalstates.append(item)
-        final_list = [tokens[i]+' => '+finalstates[i] for i in range(len(tokens))]
+        final_list = [finalstates[i]+' '+'=>'+' '+tokens[i] for i in range(len(tokens))]
         print('\n'.join(final_list))
                 
         visualization(transition_function)
