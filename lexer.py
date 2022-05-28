@@ -1,4 +1,11 @@
-from main import *
+import pickle
+
+with open('dfa_data.pkl', 'rb') as inp:
+    transition_function = pickle.load(inp)
+    states = pickle.load(inp)
+    states2 = pickle.load(inp)
+    final_list = pickle.load(inp)
+    tokens = pickle.load(inp)
 
 
 

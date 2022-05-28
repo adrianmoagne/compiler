@@ -1,6 +1,9 @@
 from functions import *
 from dfa import *
 from visualization_trasition_function import visualization
+import pickle
+
+
 
 flag = True
 final, tokens = [], []
@@ -49,10 +52,16 @@ try:
                 item = item.replace('#', '')
                 finalstates.append(item)
         final_list = [finalstates[i]+' '+'=>'+' '+tokens[i] for i in range(len(tokens))]
-        print('\n'.join(final_list))
-                
+        print('\n'.join(final_list))          
         visualization(transition_function)
-    
+
+        with open('dfa_data.pkl', 'wb') as outp:
+            pickle.dump(transition_function, outp, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(states, outp, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(states2, outp, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(final_list, outp, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(tokens, outp, pickle.HIGHEST_PROTOCOL)
+
 except:
     print(colored('Expressão inválida', 'red'))
    
