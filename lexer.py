@@ -53,6 +53,8 @@ with open('tape.txt') as tape:
         for token in range(len(tokenized)):
             try:
                 tokenized[token], last_position = lexer(transition_function, line, last_position)
+                if last_position >= len(line):
+                    break
                 #print(tokenized[token])
                 #print(last_position)
             except:
