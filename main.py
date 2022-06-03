@@ -5,6 +5,14 @@ import pickle
 
 
 
+final = [   
+        list('/.\*.(a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+y+x+z+ )*./.\*'), 
+        list('for'), 
+        list("print\((a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+y+x+z+ +')*\)")
+        ]
+tokens = ['comment', 'for', 'print']
+
+'''
 flag = True
 final, tokens = [], []
 while flag:
@@ -14,12 +22,11 @@ while flag:
         flag = False
         continue
     inpt = input(colored('Expressão regular: ', 'magenta'))
-    exp = explicit(inpt)
     inpt = list(inpt)
     final.append(inpt)
 
 tokens.pop()
-
+'''
 
 if final:    
     exp = finalize(final)
@@ -49,9 +56,12 @@ try:
         finalstates = []
         for item in aux:
             if '#' in item:
-                item = item.replace('#', '')
+                item = list(item.replace('#', '').replace(' ', ','))
+                item.pop(-1)
+                item = ''.join(item)
                 finalstates.append(item)
-        final_list = [finalstates[i]+' '+'=>'+' '+tokens[i] for i in range(len(tokens))]
+        final_list = ['('+finalstates[i]+')'+' '+'=>'+' '+tokens[i] for i in range(len(tokens))]
+        print(colored('Estados finais + tokens:', 'red'))
         print('\n'.join(final_list))          
         visualization(transition_function)
 
@@ -61,7 +71,7 @@ try:
             pickle.dump(states2, outp, pickle.HIGHEST_PROTOCOL)
             pickle.dump(final_list, outp, pickle.HIGHEST_PROTOCOL)
             pickle.dump(tokens, outp, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(final, outp, pickle.HIGHEST_PROTOCOL)
 
 except:
     print(colored('Expressão inválida', 'red'))
-   

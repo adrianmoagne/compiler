@@ -247,13 +247,13 @@ def DFA(followposz, nodes,postions,alphabet):
     for index in range(1,len(states)):
         states2[index] = 'q'+str(index)
         for value in transition_function.keys():
-            if states2[index] in value and '*' in value and len(states2[index]) == len(value)-1:
+            if '*'+states2[index] == value:
                 states2[index] = '*'+states2[index]
      
     
     
     
-    print(f'Q = {states}\n {states2}')
+    #print(f"Q = {states2}\nQ' = {states}")
     print('')
     #print(transition_function)
  
