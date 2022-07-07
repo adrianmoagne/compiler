@@ -39,16 +39,6 @@ with open('tape.txt') as tape:
         #tape = input('Digite o código a ser analisado: ')
         tokenized = [''] * len(line)
         i = 0
-        
-        while True:
-            if i < len(line):
-                if line[i] == '\\':
-                    line[i+1] = '\\'+line[i+1]
-                    line.pop(i)
-            else:
-                break
-            i+=1
-        
         last_position = 0
         for token in range(len(tokenized)):
             try:
@@ -62,10 +52,18 @@ with open('tape.txt') as tape:
         tokenized = [''.join(tokenized[i]) for i in range(len(tokenized))]
         print(''.join(tokenized), end='')
 # expressão regular bugada -> (/.\*.(a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+y+x+z+ )*./.\*)
-    
+print('')
     
 #DONE lexer não lê \Símbolo
-    
+'''
+while True:
+            if i < len(line):
+                if line[i] == '\\':
+                    line[i+1] = '\\'+line[i+1]
+                    line.pop(i)
+            else:
+                break
+            i+=1'''
 
 
 

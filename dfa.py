@@ -161,9 +161,9 @@ def transition(transition_function, state, word, i):
         return state
     return transition(transition_function, transition_function[state][word[i]], word, i+1)'''
 
-def DFA(followposz, nodes,postions,alphabet):
+def DFA(followposz, nodes,positions,alphabet):
     q0 = nodes[0].firstposz
-    aux = postions.copy()
+    aux = positions.copy()
     #print(f'q0 =  {q0}')
     states, states_unmarked = [], []
     i = 0
@@ -176,12 +176,16 @@ def DFA(followposz, nodes,postions,alphabet):
         state = states_unmarked.pop(0)
         states.append(state)
         for symbol in alphabet:
+            if '\\' in symbol:
+                symbol = symbol.replace('\\', '')
             U = set()        
             for position in state:
-                if postions[position] == '#':
+                if '\\' in positions[position]:
+                    positions[position] = positions[position].replace('\\', '')
+                if positions[position] == '#':
                     pos = position
                     flag = True
-                if postions[position] == symbol:
+                if positions[position] == symbol:
                     U = U.union(followposz[position])
             if U not in states_unmarked and U not in states:
                 states_unmarked.append(U)
